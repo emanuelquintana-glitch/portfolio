@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log de Investigación - Emanuel Quintana Silva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-dark: #0b0d17;
+            --ocean-deep: #064273;
+            --aquamarine-bright: #09C3DB;
+            --ocean-mid: #298AAA;
+            --ocean-light: #7ACDDA;
+            --accent-red: #fc3d21;
+            --accent-gold: #ffbc00;
+            --panel-bg: #ffffff;
+            --panel-light: #f4f4f4;
+            --text-dark: #000000;
+            --text-light: #ffffff;
+        }
+        body {
+            margin: 0;
+            background: var(--space-dark);
+            padding: 40px 20px;
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: var(--text-light);
+        }
+        .mission-container {
+            max-width: 1100px;
+            margin: auto;
+            background: var(--panel-bg);
+            border: 2px solid var(--ocean-deep);
+            box-shadow: 20px 20px 0px rgba(6, 66, 115, 0.3);
+        }
+        /* Banner de Control de Misión */
+        .mission-header {
+            background: var(--ocean-deep);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--text-dark);
+        }
+        .agency-id {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .version-badge {
+            width: 35px;
+            height: 35px;
+            border: 2px solid var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 10px;
+        }
+        .agency-title {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--accent-gold);
+        }
+        .agency-name {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        .mission-status {
+            text-align: right;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+        .status-stable {
+            color: #00ff00;
+        }
+        /* Layout Principal */
+        .mission-layout {
+            display: flex;
+            color: var(--text-dark);
+        }
+        /* Panel de Telemetría Lateral */
+        .telemetry-panel {
+            width: 280px;
+            background: var(--panel-light);
+            border-right: 2px solid var(--text-dark);
+            padding: 40px 25px;
+        }
+        .mission-id-box {
+            border: 1px solid var(--text-dark);
+            padding: 15px;
+            background: var(--panel-bg);
+            margin-bottom: 30px;
+        }
+        .mission-id-label {
+            margin: 0;
+            font-size: 10px;
+            color: var(--ocean-deep);
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+        .mission-id-value {
+            margin: 5px 0 0 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--ocean-deep);
+        }
+        .telemetry-section {
+            margin-bottom: 40px;
+        }
+        .telemetry-title {
+            font-size: 12px;
+            font-weight: 900;
+            border-bottom: 2px solid var(--ocean-deep);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .telemetry-reading {
+            margin-bottom: 20px;
+        }
+        .telemetry-label {
+            display: block;
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .telemetry-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--ocean-deep);
+        }
+        .telemetry-unit {
+            font-size: 12px;
+            color: var(--ocean-mid);
+        }
+        .console-log {
+            background: var(--ocean-deep);
+            color: var(--text-light);
+            padding: 15px;
+            font-size: 10px;
+            line-height: 1.5;
+            font-family: 'Space Mono', monospace;
+            border-left: 3px solid var(--aquamarine-bright);
+        }
+        /* Contenido Principal */
+        .mission-content {
+            flex: 1;
+            padding: 50px;
+        }
+        .mission-header-content {
+            margin-bottom: 40px;
+        }
+        .critical-tag {
+            background: var(--accent-red);
+            color: var(--text-light);
+            padding: 3px 10px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .mission-title {
+            font-size: 55px;
+            line-height: 0.85;
+            margin: 15px 0;
+            font-weight: 900;
+            letter-spacing: -3px;
+            text-transform: uppercase;
+        }
+        .mission-title-accent {
+            color: var(--ocean-deep);
+        }
+        .mission-subtitle {
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            color: #444;
+            font-style: italic;
+            line-height: 1.4;
+            max-width: 80%;
+        }
+        /* Secciones del Portafolio */
+        .portfolio-section {
+            margin: 40px 0;
+            padding: 30px 0;
+            border-top: 1px solid #ddd;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 25px;
+        }
+        .section-id {
+            font-size: 10px;
+            color: var(--ocean-mid);
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--ocean-deep);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--ocean-mid);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        /* Badges Académicos */
+        .badges-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+        }
+        /* Herramientas y Tecnologías */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .tool-card {
+            background: #f8fbfc;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid var(--ocean-light);
+            font-size: 14px;
+        }
+        .tool-card strong {
+            color: var(--ocean-deep);
+            display: block;
+            margin-bottom: 5px;
+        }
+        /* Proyectos */
+        .project-card {
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: #fdfdfd;
+            position: relative;
+            border-left: 5px solid var(--aquamarine-bright);
+        }
+        .project-id {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--ocean-deep);
+            color: var(--text-light);
+            padding: 2px 8px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+        .project-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ocean-deep);
+            margin-bottom: 10px;
+        }
+        .project-tech {
+            display: inline-block;
+            background-color: #e9f7fb;
+            color: var(--ocean-deep);
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            margin: 5px 5px 5px 0;
+        }
+        /* Métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border: 1px solid #ddd;
+            margin: 30px 0;
+        }
+        .metric-cell {
+            background: white;
+            padding: 25px 15px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--ocean-deep);
+            display: block;
+        }
+        .metric-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        /* Contacto */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .contact-item {
+            padding: 15px;
+            background: #f8fbfc;
+            border: 1px solid var(--ocean-light);
+        }
+        .contact-item strong {
+            color: var(--ocean-deep);
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        /* Botón de Acción */
+        .mission-footer {
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+        .footer-copyright {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .action-button {
+            background: var(--ocean-deep);
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 15px 30px;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 2px;
+            box-shadow: 6px 6px 0px var(--aquamarine-bright);
+            border: 1px solid var(--ocean-deep);
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .action-button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--aquamarine-bright);
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .mission-layout {
+                flex-direction: column;
+            }
+            .telemetry-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--text-dark);
+            }
+            .mission-title {
+                font-size: 40px;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .mission-title {
+                font-size: 32px;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor Estilo Módulo de Comando -->
+    <div class="mission-container">
+        
+        <!-- Header: Mission Control Banner -->
+        <div class="mission-header">
+            <div class="agency-id">
+                <div class="version-badge">V.25</div>
+                <div>
+                    <div class="agency-title">RESEARCH DATA LOG</div>
+                    <div class="agency-name">ECONOMÍA COMPUTACIONAL LAB</div>
+                </div>
+            </div>
+            <div class="mission-status">
+                STATUS: <span class="status-stable">STABLE</span><br>
+                T-MINUS: 00:00:00
+            </div>
+        </div>
+
+        <div class="mission-layout">
+            
+            <!-- Sidebar de Telemetría -->
+            <div class="telemetry-panel">
+                <div class="mission-id-box">
+                    <h4 class="mission-id-label">RESEARCHER_ID</h4>
+                    <p class="mission-id-value">QUINTANA-ECON-25</p>
+                </div>
+
+                <div class="telemetry-section">
+                    <h3 class="telemetry-title">Telemetría Académica</h3>
+                    <div class="telemetry-reading">
+                        <span class="telemetry-label">IMPACTO DE CÓDIGO</span>
+                        <div class="telemetry-value">942.8 <small class="telemetry-unit">LOC/s</small></div>
+                    </div>
+                    <div class="telemetry-reading">
+                        <span class="telemetry-label">EFICIENCIA ANÁLISIS</span>
+                        <div class="telemetry-value">86.5 <small class="telemetry-unit">%</small></div>
+                    </div>
+                    <div class="telemetry-reading">
+                        <span class="telemetry-label">PROYECTOS ACTIVOS</span>
+                        <div class="telemetry-value">4 <small class="telemetry-unit">/5</small></div>
+                    </div>
+                </div>
+
+                <div class="telemetry-section">
+                    <h3 class="telemetry-title">Especializaciones</h3>
+                    <div style="font-size: 13px; line-height: 1.6; color: #444;">
+                        • Econometría Computacional<br>
+                        • Economía Matemática<br>
+                        • Métodos Cuantitativos<br>
+                        • Modelación Computacional
+                    </div>
+                </div>
+
+                <div class="console-log">
+                    > ANALYZING_ECONOMIC_DATA...<br>
+                    > OPTIMIZING_MODELS...<br>
+                    > SYNC_COMPLETE.<br>
+                    > READY_FOR_RESEARCH.
+                </div>
+            </div>
+
+            <!-- Contenido del Reporte Científico -->
+            <div class="mission-content">
+                <header class="mission-header-content">
+                    <span class="critical-tag">ACTIVE RESEARCHER</span>
+                    <h2 class="mission-title">
+                        EMANUEL <br><span class="mission-title-accent">QUINTANA SILVA.</span>
+                    </h2>
+                    <p class="mission-subtitle">
+                        Investigación en la intersección de la economía teórica, matemáticas aplicadas y computación científica para análisis de sistemas complejos.
+                    </p>
+                </header>
+
+                <!-- Badges Académicos -->
+                <div class="badges-grid">
+                    <img src="https://img.shields.io/badge/ORCID-0009--0006--8419--2805-064273?style=flat-square&logo=orcid&logoColor=white" alt="ORCID">
+                    <img src="https://img.shields.io/badge/UPTC-Universidad_Pedagógica-298AAA?style=flat-square" alt="UPTC">
+                    <img src="https://img.shields.io/badge/Economía_Cuantitativa-Enfoque_Principal-09C3DB?style=flat-square" alt="Economía Cuantitativa">
+                    <img src="https://img.shields.io/badge/R/Python-Herramientas_Principal-7ACDDA?style=flat-square&logo=python" alt="R/Python">
+                    <img src="https://img.shields.io/badge/Licencia-CC_BY_NC_4.0-064273?style=flat-square" alt="Licencia">
+                </div>
+
+                <!-- 01. Perfil de Investigación -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">01. Perfil de Misión</h3>
+                            <div class="section-subtitle">OBJETIVOS Y ENFOQUE PRINCIPAL</div>
+                        </div>
+                        <div class="section-id">SECTION_01</div>
+                    </div>
+                    <p style="font-size: 15px; color: #555; line-height: 1.7;">
+                        Mi trabajo se sitúa en la intersección de la <strong>economía teórica</strong>, las <strong>matemáticas aplicadas</strong> y la <strong>computación científica</strong>. Me especializo en el desarrollo e implementación de métodos econométricos avanzados, utilizando lenguajes de programación estadística como R y Python para abordar problemas complejos en ciencias sociales cuantitativas.
+                    </p>
+                    <p style="font-size: 15px; color: #555; line-height: 1.7; margin-top: 15px;">
+                        Mi enfoque combina rigor matemático con aplicaciones prácticas, desarrollando herramientas computacionales que permiten analizar fenómenos económicos desde perspectivas innovadoras, integrando teoría económica clásica con técnicas modernas de análisis de datos.
+                    </p>
+                </div>
+
+                <!-- 02. Áreas de Investigación -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">02. Sectores de Estudio</h3>
+                            <div class="section-subtitle">DISCIPLINAS Y ESPECIALIZACIONES</div>
+                        </div>
+                        <div class="section-id">SECTION_02</div>
+                    </div>
+                    
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <strong>Econometría Computacional</strong>
+                            Desarrollo de modelos econométricos utilizando métodos computacionales avanzados para estimación, inferencia y predicción.
+                        </div>
+                        <div class="tool-card">
+                            <strong>Economía Matemática</strong>
+                            Formalización matemática de problemas económicos, teoría de optimización y análisis de equilibrio general.
+                        </div>
+                        <div class="tool-card">
+                            <strong>Métodos Cuantitativos</strong>
+                            Aplicación de técnicas estadísticas avanzadas y machine learning para análisis de datos en ciencias sociales.
+                        </div>
+                        <div class="tool-card">
+                            <strong>Modelación Computacional</strong>
+                            Simulaciones numéricas y modelos basados en agentes para estudiar dinámicas económicas y sistemas complejos.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 03. Herramientas y Tecnologías -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">03. Herramientas de Misión</h3>
+                            <div class="section-subtitle">TECNOLOGÍAS Y PLATAFORMAS</div>
+                        </div>
+                        <div class="section-id">SECTION_03</div>
+                    </div>
+                    
+                    <div class="tools-grid">
+                        <div class="tool-card"><strong>R</strong>Análisis estadístico avanzado</div>
+                        <div class="tool-card"><strong>Python</strong>Modelado científico y ML</div>
+                        <div class="tool-card"><strong>SQL</strong>Gestión de bases de datos</div>
+                        <div class="tool-card"><strong>Pandas/NumPy</strong>Análisis de datos</div>
+                        <div class="tool-card"><strong>Statsmodels</strong>Modelos econométricos</div>
+                        <div class="tool-card"><strong>Matplotlib/ggplot2</strong>Visualización científica</div>
+                        <div class="tool-card"><strong>LaTeX</strong>Documentación académica</div>
+                        <div class="tool-card"><strong>Git</strong>Control de versiones</div>
+                    </div>
+                </div>
+
+                <!-- 04. Proyectos de Investigación -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">04. Expediciones Activas</h3>
+                            <div class="section-subtitle">PROYECTOS DE INVESTIGACIÓN</div>
+                        </div>
+                        <div class="section-id">SECTION_04</div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-id">PROJECT_01</div>
+                        <div class="project-title">Applied Computational Mathematics (2024)</div>
+                        <p><strong>Descripción:</strong> Implementación de algoritmos computacionales para resolver problemas de optimización económica, ecuaciones diferenciales y análisis numérico aplicado a modelos macroeconómicos dinámicos.</p>
+                        <p><strong>Tecnologías:</strong> 
+                            <span class="project-tech">Numerical Analysis</span>
+                            <span class="project-tech">Optimization</span>
+                            <span class="project-tech">Python</span>
+                        </p>
+                        <p><strong>Repositorio:</strong> github.com/emanuelquintana-glitch/APPLIED_-_COMPUTATIONAL_MATHS</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-id">PROJECT_02</div>
+                        <div class="project-title">Economía Matemática: Apuntes y Desarrollos (2023-2024)</div>
+                        <p><strong>Descripción:</strong> Compilación sistemática de teoremas, demostraciones y aplicaciones en economía matemática, cubriendo desde fundamentos de análisis hasta teoría del equilibrio general y optimización dinámica.</p>
+                        <p><strong>Tecnologías:</strong> 
+                            <span class="project-tech">Mathematical Economics</span>
+                            <span class="project-tech">Theory</span>
+                            <span class="project-tech">LaTeX</span>
+                        </p>
+                        <p><strong>Repositorio:</strong> github.com/emanuelquintana-glitch/Apuntes-Economia-Matematica</p>
+                    </div>
+                </div>
+
+                <!-- 05. Métricas de Actividad -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">05. Métricas de Vuelo</h3>
+                            <div class="section-subtitle">ESTADÍSTICAS Y RENDIMIENTO</div>
+                        </div>
+                        <div class="section-id">SECTION_05</div>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-cell">
+                            <span class="metric-value">5+</span>
+                            <span class="metric-label">Repositorios</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-value">4</span>
+                            <span class="metric-label">Proyectos Activos</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-value">3</span>
+                            <span class="metric-label">Seguidores</span>
+                        </div>
+                        <div class="metric-cell">
+                            <span class="metric-value">100+</span>
+                            <span class="metric-label">Commits</span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f8fbfc; padding: 25px; border: 1px dashed var(--ocean-light); margin-top: 20px; text-align: center;">
+                        <div style="font-size: 12px; color: var(--ocean-mid); margin-bottom: 10px;">VISUALIZACIÓN DE DATOS</div>
+                        <div style="color: var(--ocean-deep); font-family: 'Space Mono', monospace; font-size: 13px;">
+                            [GitHub Stats: github-readme-stats.vercel.app/api?username=emanuelquintana-glitch]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 06. Contacto e Identificadores -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">06. Canal de Comunicación</h3>
+                            <div class="section-subtitle">CONTACTO E IDENTIFICADORES</div>
+                        </div>
+                        <div class="section-id">SECTION_06</div>
+                    </div>
+                    
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <strong>Investigador</strong>
+                            Emanuel Quintana Silva
+                        </div>
+                        <div class="contact-item">
+                            <strong>Institución</strong>
+                            Universidad Pedagógica y Tecnológica de Colombia (UPTC)
+                        </div>
+                        <div class="contact-item">
+                            <strong>Programa</strong>
+                            Economía
+                        </div>
+                        <div class="contact-item">
+                            <strong>Email Institucional</strong>
+                            emanuel.quintana@uptc.edu.co
+                        </div>
+                        <div class="contact-item">
+                            <strong>ORCID</strong>
+                            0009-0006-8419-2805
+                        </div>
+                        <div class="contact-item">
+                            <strong>GitHub</strong>
+                            @emanuelquintana-glitch
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 07. Declaración de Investigación -->
+                <div class="portfolio-section">
+                    <div class="section-header">
+                        <div>
+                            <h3 class="section-title">07. Declaración de Misión</h3>
+                            <div class="section-subtitle">FILOSOFÍA DE INVESTIGACIÓN</div>
+                        </div>
+                        <div class="section-id">SECTION_07</div>
+                    </div>
+                    
+                    <div style="background: #f8fbfc; padding: 30px; border-left: 5px solid var(--aquamarine-bright); font-style: italic; color: #444; line-height: 1.7;">
+                        "La investigación en economía computacional representa la convergencia entre el rigor matemático de la teoría económica y el poder transformador de la ciencia de datos. Mi trabajo busca construir puentes metodológicos entre estas disciplinas, desarrollando herramientas que no solo expliquen fenómenos económicos, sino que también anticipen dinámicas complejas en sistemas sociales."
+                        
+                        <div style="margin-top: 20px; font-style: normal; font-weight: bold; color: var(--ocean-deep);">
+                            Emanuel Quintana Silva<br>
+                            <span style="font-size: 13px; font-weight: normal; color: #666;">
+                                Economista en Formación, Universidad Pedagógica y Tecnológica de Colombia<br>
+                                Última actualización: Diciembre 2024
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Acción -->
+                <div class="mission-footer">
+                    <div class="footer-copyright">
+                        © 2024 ECON_COMPUTATIONAL_RESEARCH<br>
+                        TUNJA, BOYACÁ. COLOMBIA
+                    </div>
+                    <a href="https://github.com/emanuelquintana-glitch" class="action-button">
+                        ACCESS RESEARCH_LOG →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
