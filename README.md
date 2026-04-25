@@ -1,2 +1,2 @@
 # Portfolio
-Portafolio académico interactivo - Economía Computacional UPTC.
+Portafolio académico interactivo - Economía Computacional UPTC
